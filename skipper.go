@@ -992,11 +992,11 @@ func listen(o *Options, mtr metrics.Metrics) (net.Listener, error) {
 	if !o.EnableTCPQueue {
 		ln, err := net.Listen("tcp", o.Address)
 		if o.ProxyProtocolEnable {
+			log.Printf("Proxy protocol listener")
 			pl := &proxyproto.Listener{
 				Listener:          ln,
 				ReadHeaderTimeout: 10 * time.Second,
 			}
-			defer pl.Close()
 			return pl, err
 		}
 		return ln, err

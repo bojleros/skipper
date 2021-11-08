@@ -3,6 +3,7 @@ package queuelistener
 import (
 	"errors"
 	"fmt"
+	"log"
 	"net"
 	"sync"
 	"time"
@@ -201,11 +202,11 @@ func Listen(o Options) (net.Listener, error) {
 	}
 
 	if o.ProxyProtocol {
+		log.Printf("Proxy protocol listener")
 		pl := &proxyproto.Listener{
 			Listener:          nl,
 			ReadHeaderTimeout: 10 * time.Second,
 		}
-		defer pl.Close()
 		return listenWith(pl, o)
 	}
 

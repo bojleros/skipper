@@ -647,6 +647,7 @@ func (c *Config) ToOptions() skipper.Options {
 		DataClientPlugins:               c.DataclientPlugins.values,
 		Plugins:                         c.MultiPlugins.values,
 		PluginDirs:                      []string{skipper.DefaultPluginDir},
+		ProxyProtocolEnable:             c.ProxyProtocolEnable,
 
 		// logging, metrics, tracing:
 		EnablePrometheusMetrics:             c.EnablePrometheusMetrics,
