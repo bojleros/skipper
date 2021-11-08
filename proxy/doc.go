@@ -127,6 +127,19 @@ and `SetOutgoingHost()` methods of the `FilterContext` need to be used
 instead of the `Request.Header` map.
 
 
+Proxy protocol support
+
+Usually when you run skipper behind another loadbalancer you cannot just
+use an client source addresses in your ip whitelists. This is strictly
+related to the fact that front loadbalancer is contacting skipper on
+behalf of a client. As a result skipper recognizes loadbalancer ip
+as a client addres.
+
+Proxy protocol is responsible for passing client source address on
+layer 4 loadbalancers and makes ingress level client ip whitelists
+possible again.
+
+
 Circuit Breakers
 
 When configured, skipper can use circuit breakers for the backend

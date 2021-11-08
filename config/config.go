@@ -37,6 +37,7 @@ type Config struct {
 	IgnoreTrailingSlash             bool           `yaml:"ignore-trailing-slash"`
 	Insecure                        bool           `yaml:"insecure"`
 	ProxyPreserveHost               bool           `yaml:"proxy-preserve-host"`
+	ProxyProtocolEnable             bool           `yaml:"proxy-protocol-enable"`
 	DevMode                         bool           `yaml:"dev-mode"`
 	SupportListener                 string         `yaml:"support-listener"`
 	DebugListener                   string         `yaml:"debug-listener"`
@@ -283,6 +284,7 @@ func NewConfig() *Config {
 	flag.BoolVar(&cfg.IgnoreTrailingSlash, "ignore-trailing-slash", false, "flag indicating to ignore trailing slashes in paths when routing")
 	flag.BoolVar(&cfg.Insecure, "insecure", false, "flag indicating to ignore the verification of the TLS certificates of the backend services")
 	flag.BoolVar(&cfg.ProxyPreserveHost, "proxy-preserve-host", false, "flag indicating to preserve the incoming request 'Host' header in the outgoing requests")
+	flag.BoolVar(&cfg.ProxyProtocolEnable, "proxy-protocol-enable", false, "enable proxy protocol support")
 	flag.BoolVar(&cfg.DevMode, "dev-mode", false, "enables developer time behavior, like ubuffered routing updates")
 	flag.StringVar(&cfg.SupportListener, "support-listener", ":9911", "network address used for exposing the /metrics endpoint. An empty value disables support endpoint.")
 	flag.StringVar(&cfg.DebugListener, "debug-listener", "", "when this address is set, skipper starts an additional listener returning the original and transformed requests")
