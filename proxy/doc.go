@@ -130,7 +130,7 @@ instead of the `Request.Header` map.
 Proxy protocol support
 
 Usually when you run skipper behind another loadbalancer you cannot just
-use an client source addresses in your ip whitelists. This is strictly
+use a client source addresses in your ip whitelists. This is strictly
 related to the fact that front loadbalancer is contacting skipper on
 behalf of a client. As a result skipper recognizes loadbalancer ip
 as a client addres.
