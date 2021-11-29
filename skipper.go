@@ -57,6 +57,8 @@ import (
 	"github.com/zalando/skipper/secrets"
 	"github.com/zalando/skipper/swarm"
 	"github.com/zalando/skipper/tracing"
+
+	"github.com/pires/go-proxyproto"
 )
 
 const (
@@ -783,6 +785,9 @@ type Options struct {
 	// ClusterRatelimitMaxGroupShards specifies the maximum number of group shards for the clusterRatelimit filter
 	ClusterRatelimitMaxGroupShards int
 
+	// Enable proxy protocol support
+	ProxyProtocolEnable bool
+
 	testOptions
 }
 
@@ -985,7 +990,16 @@ func listen(o *Options, mtr metrics.Metrics) (net.Listener, error) {
 	}
 
 	if !o.EnableTCPQueue {
-		return net.Listen("tcp", o.Address)
+		ln, err := net.Listen("tcp", o.Address)
+		if o.ProxyProtocolEnable {
+			log.Printf("Proxy protocol listener")
+			pl := &proxyproto.Listener{
+				Listener:          ln,
+				ReadHeaderTimeout: 10 * time.Second,
+			}
+			return pl, err
+		}
+		return ln, err
 	}
 
 	var memoryLimit int
@@ -1026,6 +1040,7 @@ func listen(o *Options, mtr metrics.Metrics) (net.Listener, error) {
 		ConnectionBytes:  o.ExpectedBytesPerRequest,
 		QueueTimeout:     qto,
 		Metrics:          mtr,
+		ProxyProtocol:    o.ProxyProtocolEnable,
 	})
 }
 

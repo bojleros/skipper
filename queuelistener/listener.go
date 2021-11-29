@@ -3,10 +3,12 @@ package queuelistener
 import (
 	"errors"
 	"fmt"
+	"log"
 	"net"
 	"sync"
 	"time"
 
+	"github.com/pires/go-proxyproto"
 	"github.com/zalando/skipper/logging"
 	"github.com/zalando/skipper/metrics"
 )
@@ -68,6 +70,9 @@ type Options struct {
 
 	// Log is used to log unexpected, non-fatal errors. It defaults to logging.DefaultLog.
 	Log logging.Logger
+
+	// Proxy protocol support
+	ProxyProtocol bool
 
 	testQueueChangeHook chan struct{}
 }
@@ -194,6 +199,15 @@ func Listen(o Options) (net.Listener, error) {
 	nl, err := net.Listen(o.Network, o.Address)
 	if err != nil {
 		return nil, err
+	}
+
+	if o.ProxyProtocol {
+		log.Printf("Proxy protocol listener")
+		pl := &proxyproto.Listener{
+			Listener:          nl,
+			ReadHeaderTimeout: 10 * time.Second,
+		}
+		return listenWith(pl, o)
 	}
 
 	return listenWith(nl, o)
